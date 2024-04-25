@@ -1,4 +1,3 @@
-
 const intialGameBoard = [
     [null,null,null],
     [null,null,null],
@@ -8,6 +7,7 @@ const intialGameBoard = [
 export default function Gameboard({onSelectSquare,turns}){
     let gameboard = intialGameBoard;
 
+    
 
     //Obj turns
     for(const turn of turns){
@@ -16,18 +16,6 @@ export default function Gameboard({onSelectSquare,turns}){
         gameboard[row][col] = player;
     }
 
-    // const [gameBoard,setGameBoard] = useState(intialGameBoard);
-    
-    // function handleSelectSquare(rowIndex,colIndex){
-    //     setGameBoard((prevGameBoard) => {
-    //         const updatedBoard = [...prevGameBoard.map( innerArray => [...innerArray])];
-    //         updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
-    //         return updatedBoard;
-    //     });
-    //     onSelectSquare(); 
-    //         //The gameboard can accept a function as a props 
-    // }       //and then can call and execute it.
-    
     return(
         <ol id="game-board"> 
           {gameboard.map((row,rowIndex) => (
@@ -35,7 +23,12 @@ export default function Gameboard({onSelectSquare,turns}){
                 <ol>
                     {row.map((playerSymbol,colIndex) => (
                     <li key={colIndex}>
-                        <button onClick={() => onSelectSquare(rowIndex,colIndex)}>{playerSymbol}</button>
+                        <button 
+                            onClick={() => onSelectSquare(rowIndex,colIndex)} 
+                            disabled={playerSymbol !== null}
+                            >   
+                            {playerSymbol}
+                        </button>
                     </li>
                     ))}
                 </ol>

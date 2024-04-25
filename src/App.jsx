@@ -28,8 +28,6 @@ function App() {
   
   const activePlayer = deriveActivePlayer(gameTurns);
 
-  
-
   for(const turn of gameTurns){
       const { square , player } = turn;
       const { row ,col } = square;
@@ -80,7 +78,7 @@ function App() {
         {winner && <p>You won, {winner}!!</p>}
         <Gameboard 
         onSelectSquare={handleSelectSquare} 
-        board={gameboard}/>
+        board={gameboard} win={winner}/>
       </div>
       <Log turns={gameTurns}/>
     </main>

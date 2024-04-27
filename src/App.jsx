@@ -3,6 +3,7 @@ import Gameboard from "./components/GameBoard";
 import Log from "./components/Log";
 import { useState } from "react";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
+import GameOver from "./components/GameOver";
 
 function deriveActivePlayer(gameTurns){
   let currentPlayer = 'X';
@@ -19,7 +20,7 @@ const initialGameBoard = [
   [null,null,null],
 ];
 
-let gameboard = initialGameBoard;
+let gameboard = [...initialGameBoard.map(array => [...array])];
 
 function App() {
 
@@ -31,10 +32,11 @@ function App() {
   for(const turn of gameTurns){
       const { square , player } = turn;
       const { row ,col } = square;
+
       gameboard[row][col] = player;
   }
 
-  let winner = null;
+  let winner;
 
   for(const combination of WINNING_COMBINATIONS){
     const firstSquare = gameboard[combination[0].row] [combination[0].column];
@@ -50,24 +52,30 @@ function App() {
     }
 
   } 
-  
-  
+
+  const hasdraw = gameTurns.length === 9 && !winner;
+
+
   function handleSelectSquare(rowIndex,colIndex){
     
-    //setActivePlayer( (currentlyActivePlayer) => currentlyActivePlayer === 'X' ? 'O' : 'X');
+    
     setgameTurns(prevTurns => {
 
       const currentPlayer = deriveActivePlayer(prevTurns);
 
       const updatedTurns = [
-        {square : { row: rowIndex, col: colIndex}, player: activePlayer},
-        ...prevTurns
+        {square : { row: rowIndex, col: colIndex}, player: currentPlayer},
+        ...prevTurns,
       ];
 
       return updatedTurns;
     });
   }
   
+  function handleRematch(){
+    setgameTurns([]);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -75,7 +83,7 @@ function App() {
           <Player initialName='Player 1' symbol='X' isActive={activePlayer === 'X'}/>
           <Player initialName='Player 2' symbol='O' isActive={activePlayer === 'O'}/>
         </ol>
-        {winner && <p>You won, {winner}!!</p>}
+        {(winner || hasdraw) && <GameOver winnerName={winner}  onRestart={handleRematch}/>}
         <Gameboard 
         onSelectSquare={handleSelectSquare} 
         board={gameboard} win={winner}/>
